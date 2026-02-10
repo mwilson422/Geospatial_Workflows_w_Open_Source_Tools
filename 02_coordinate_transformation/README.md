@@ -32,7 +32,7 @@ Reprojecting geospatial data from one coordinate reference system (CRS) to anoth
 # Reproject to ESPG 4326 (WSG84)
 ogr2ogr -t_srs EPSG:4326 output.shp input.shp
 ```
-- `-t_srs` = target spatial refernce system
+- `-t_srs` = target spatial reference system
 
 ### Specify source CRS (if not defined in the file)
 ```bash
@@ -52,7 +52,7 @@ ogr2ogr -a_srs EPSG:4326 output.shp input.shp
     - The file has the wrong CRS metadata but the coordinates themselves are correct.
     - This means sometimes you need to investigate the data and compare the CRS given with the X/Y values given and if they are what you expect them to be. 
 
-he coordinates do not change, you are just assigning the CRS.
+The coordinates do not change, you are just assigning the CRS.
 
 ## Method 2: Using Python with GeoPandas
 ```python

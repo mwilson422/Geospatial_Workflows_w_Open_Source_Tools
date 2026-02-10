@@ -53,6 +53,7 @@ ogr2ogr --help
 ## Additional Options
 **Common ogr2ogr Flags**
 - `-t_srs EPSG:4326` = target spatial reference system (will reproject to this)
+- `-a_srs EPSG:2193` = assigns a spatial reference system (without reprojecting)
 - `-nlt POLYGON` = force the geometry type (POINT, LINESTRING, POLYGON, etc.)
 - `-dim XY` = Force 2D (strip Z/M values)
 - `-append` = append to existing layer
