@@ -11,7 +11,7 @@ This repository serves as a reference guide for geospatial professionals looking
 - GeoPandas
 - Rasterio
 - Shapely
-- PostGIS (optional)
+- SQLite/PostGIS (optional)
 
 ## Workflows Covered
 1. Format Conversion
