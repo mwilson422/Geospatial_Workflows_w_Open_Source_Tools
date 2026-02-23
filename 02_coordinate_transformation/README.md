@@ -9,7 +9,7 @@ Reprojecting geospatial data from one coordinate reference system (CRS) to anoth
 - Converting between geographic (lat/lon) and projected coordinate systems
 - Ensuring accurate distance/area measurements (projected CRS)
 - Standardizing data across a project
-- Meeting client or regulatory requirements for specific coordinate systems
+- Meeting requirements for specific coordinate systems
 
 ## Common Coordinate Systems
 
@@ -86,32 +86,6 @@ else:
     gdf = gdf.to_crs("EPSG:3857")
 ```
 
-### Batch Reprojection
-```python
-from pathlib import Path
-
-input_dir = Path("input_data")
-output_dir = Path("output_data")
-output_dir.mkdir(exist_ok=True)
-
-target_crs = "EPSG:4326"
-
-for file in input_dir.glob("*.shp"):
-    gdf = gpd.read_file(file)
-    
-    # Skip if already in target CRS
-    if gdf.crs == target_crs:
-        print(f"Skipping {file.name} - already in {target_crs}")
-        continue
-    
-    # Reproject
-    gdf_reprojected = gdf.to_crs(target_crs)
-    
-    # Save
-    output_file = output_dir / f"{file.stem}_wgs84.geojson"
-    gdf_reprojected.to_file(output_file, driver="GeoJSON")
-    print(f"Reprojected: {file.name} -> {output_file.name}")
-```
 
 ## Understanding CRS Types
 
