@@ -163,3 +163,44 @@ suburbs['SUBURB_NAME'] = (
 # Now join
 suburbs_enriched = suburbs.merge(population, on='SUBURB_NAME')
 ```
+
+## Performance Tips
+
+1. **Clean data before joining**
+```python
+   # Remove duplicates and nulls first
+   population = population.dropna(subset=['SUBURB_ID'])
+   population = population.drop_duplicates(subset='SUBURB_ID')
+```
+
+2. **Select only needed columns**
+```python
+   # Don't load entire CSV if you only need a few columns
+   population = pd.read_csv(
+       "census.csv",
+       usecols=['SUBURB_ID', 'POPULATION', 'MEDIAN_AGE']
+   )
+```
+
+3. **Use appropriate join type**
+```python
+   # Inner join is faster than outer join
+   # Use inner if you only want matching records
+   result = suburbs.merge(population, on='SUBURB_ID', how='inner')
+```
+
+4. **Convert to same data type before joining**
+```python
+   # Type conversion during join is slow
+   # Convert beforehand
+   suburbs['SUBURB_ID'] = suburbs['SUBURB_ID'].astype(str)
+   population['SUBURB_ID'] = population['SUBURB_ID'].astype(str)
+```
+
+5. **Index join keys for large datasets**
+```python
+   # Set index on join key for faster joining
+   population = population.set_index('SUBURB_ID')
+   result = suburbs.join(population, on='SUBURB_ID')
+```
+
