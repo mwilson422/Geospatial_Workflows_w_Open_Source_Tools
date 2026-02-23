@@ -1,4 +1,4 @@
-# Spatial Filtering & Clipping
+# Spatial Filtering 
 
 ## Overview
 Extracting features from a dataset based on their spatial relationship to a boundary or area of interest. This is essential for subsetting large datasets to specific study areas, extracting data within administrative boundaries, or focusing analysis on particular regions.
@@ -123,7 +123,85 @@ points_with_suburb = gpd.overlay(
 
 print(f"Points in suburbs: {len(points_in_suburbs)}")
 ```
-*** Set Operations for `gdp.overlay()`**
+**Difference between .sjoin and .overlay**
+- **.sjoin**:
+  - keeps original geometries unchanged
+  - adds attributes from one dataset to antoher based on spatial relationship
+  - Output has **same geometries** as input (left or right depending on the `how`)
+
+- **.overlay**
+  - creates new geometries from geometric operations
+  - combines attributes from both layers
+  - Output has **new geometries** created from intersection/union/etc (Only the intersecting parts)
+
+**When to Use:**
+- **.sjoin**
+  - When you don't want to modify geometries (just want to know which features realte to which)
+  - Tagging points with polygon attributes
+    ```python
+    # "Which suburb is each crime incident in?"
+    crime_points = gpd.read_file("crimes.gpkg")
+    suburbs = gpd.read_file("suburbs.gpkg")
+
+    crimes_tagged = gpd.sjoin(crime_points, suburbs, predicate='within')
+    # Result: Crime points with suburb_name added
+    ```
+  - Finding features that meet spatial criteria
+    ```python
+    # "Which parcels are in the flood zone?"
+    parcels = gpd.read_file("parcels.gpkg")
+    flood_zone = gpd.read_file("flood_zone.gpkg")
+
+    at_risk = gpd.sjoin(parcels, flood_zone, predicate='within')
+    # Result: List of parcels (with original geometries) that are in flood zone
+    ```
+  - Counting relationships
+    ```python
+    # "How many buildings per suburb?"
+    buildings = gpd.read_file("buildings.gpkg")
+    suburbs = gpd.read_file("suburbs.gpkg")
+
+    joined = gpd.sjoin(buildings, suburbs, predicate='within')
+    counts = joined.groupby('suburb_name').size()
+    # Result: Count of buildings per suburb
+    ```
+
+- **.overlay**
+  - When you want to create new geometries 
+  - Splitting features by boundaries
+    ```python
+    # "Split parcels by zoning districts"
+    parcels = gpd.read_file("parcels.gpkg")
+    zones = gpd.read_file("zoning.gpkg")
+
+    split_parcels = gpd.overlay(parcels, zones, how='intersection')
+    # Result: Parcels split at zone boundaries, each piece has zone info
+    ```
+  - Calculating areas in different categories
+    ```python
+    # "How much of each parcel is in each zone?"
+    result = gpd.overlay(parcels, zones, how='intersection')
+    result['area_in_zone'] = result.area
+    summary = result.groupby(['parcel_id', 'zone_type'])['area_in_zone'].sum()
+    ```
+  - Creating new geographic units
+    ```python
+    # "Merge overlapping features"
+    merged = gpd.overlay(layer1, layer2, how='union')
+    ```
+  - Cookie-cutter operations
+    ```python
+    # "Extract only the parts of parcels that are in conservation areas"
+    conservation_parcels = gpd.overlay(parcels, conservation, how='intersection')
+    ```
+  - Finding gaps or differences
+    ```python
+    # "Which areas are zoned but don't have parcels?"
+    gaps = gpd.overlay(zones, parcels, how='difference')
+    ```
+
+
+**Set Operations for `gdp.overlay()`**
 ```python
 parcels = gpd.read_file("parcels.gpkg")
 zones = gpd.read_file("zoning.gpkg")
