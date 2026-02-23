@@ -16,8 +16,8 @@ This repository serves as a reference guide for geospatial professionals looking
 ## Workflows Covered
 1. Format Conversion
 2. Cooredinate Transformation
-3. Spatial Filtering
-4. Attribute Joins
+3. Attribute Joins 
+4. Spatial Filtering
 5. Batch Processing
 6. Geometry Validation
 

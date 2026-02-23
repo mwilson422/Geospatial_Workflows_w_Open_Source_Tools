@@ -78,5 +78,5 @@ gdf.to_file("output.geojson", driver="GeoJSON")
 gdf.to_file("output.gpkg", layer="layer_name", driver="GPKG")
 ```
 
-## Notes
+### Notes
 GeoPandas uses Fiona (which wraps GDAL/OGR), so it supports the same formats as using GDAL/OGR. 

@@ -1,13 +1,13 @@
 # Attribute Joins
 
 ## Overview
-Combining tabular data with spatial data based on common attributes (non-spatial joins), or joining attributes between spatial datasets. This is essential for enriching geospatial data with external information like census data, property values, demographic statistics, or any other tabular information.
+Combining tabular data with spatial data based on common attributes (non-spatial joins), or joining attributes between spatial datasets. This is essential for combining geospatial data with external information like census data, property values, demographic statistics, or any other tabular information by joining on a common field. 
 
-## When to Use This
+## Examples of When to Use This
 - Add census data to geographic boundaries (e.g., population to suburbs)
 - Join property values to parcel geometries
 - Combine survey data with location features
-- Enrich spatial data with database records
+- Combine spatial data with database records
 - Link addresses to point geometries
 - Merge multiple attribute tables into spatial data
 
@@ -28,6 +28,23 @@ This README focuses on **attribute joins**
 | **Right** | All from right, matching from left | All right rows, NaN for non-matches |
 | **Outer** | All records from both | All rows from both, NaN for non-matches |
 
+## Method 1: Using ogr2ogr (Command Line)
+Can do attribute joins using SQL but there are limitations and it works best when the datasets are within the same file (such as in the same GeoPakage)
+
+```bash
+# Both layers in same GeoPackage
+ogr2ogr -dialect SQLite \
+  -sql "SELECT parcels.*, values.property_value, values.assessment_year 
+        FROM parcels 
+        LEFT JOIN property_values AS values 
+        ON parcels.parcel_id = values.parcel_id" \
+  output.gpkg input.gpkg
+```
+### Use ogr2ogr when:
+- Doing a simple join where both layers are in the same GeoPackage
+
+
+## Method 2: Using Python
 
 ### Basic Attribute Join
 ```python
